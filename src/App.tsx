@@ -15,6 +15,7 @@ import CommunityDiscussions from "./pages/CommunityDiscussions";
 import CommunityMembers from "./pages/CommunityMembers";
 import CommunitySettings from "./pages/CommunitySettings";
 import PostDetail from "./pages/PostDetail";
+import StreamDetail from "./pages/StreamDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,6 +69,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <PostDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/c/:slug/streams/:streamId"
+                element={
+                  <ProtectedRoute>
+                    <StreamDetail />
                   </ProtectedRoute>
                 }
               />

@@ -210,6 +210,9 @@ export type Database = {
           started_at: string | null;
           ended_at: string | null;
           viewer_count: number;
+          mux_stream_id: string | null;
+          mux_playback_id: string | null;
+          stream_key: string | null;
           created_at: string;
         };
         Insert: {
@@ -222,6 +225,9 @@ export type Database = {
           started_at?: string | null;
           ended_at?: string | null;
           viewer_count?: number;
+          mux_stream_id?: string | null;
+          mux_playback_id?: string | null;
+          stream_key?: string | null;
           created_at?: string;
         };
         Update: {
@@ -232,6 +238,9 @@ export type Database = {
           started_at?: string | null;
           ended_at?: string | null;
           viewer_count?: number;
+          mux_stream_id?: string | null;
+          mux_playback_id?: string | null;
+          stream_key?: string | null;
         };
         Relationships: [
           {

@@ -31,7 +31,7 @@ const CommunityHome = () => {
             </div>
             <h3 className="font-semibold text-base mb-1">{liveStream.title}</h3>
             <p className="text-sm text-muted-foreground mb-3">{liveStream.description}</p>
-            <Link to={`/c/${slug}/streams`}>
+            <Link to={`/c/${slug}/streams/${liveStream.id}`}>
               <Button size="sm" className="btn-primary-gradient text-sm font-semibold gap-1.5">
                 Watch Now
                 <ArrowRight className="w-3.5 h-3.5" />

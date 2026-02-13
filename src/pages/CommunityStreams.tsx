@@ -1,9 +1,21 @@
+import { useState } from "react";
 import CommunityLayout from "@/components/CommunityLayout";
-import { Radio, Play, Clock, Users } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Radio, Play, Clock, Users, Copy, Check } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useCommunityBySlug } from "@/hooks/use-community";
-import { useStreams } from "@/hooks/use-streams";
+import { useStreams, useCreateStream } from "@/hooks/use-streams";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { timeAgo } from "@/lib/format";
 
 const statusConfig = {
@@ -14,18 +26,77 @@ const statusConfig = {
 
 const CommunityStreams = () => {
   const { slug } = useParams();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const { data: community } = useCommunityBySlug(slug);
   const { data: streams, isLoading } = useStreams(community?.id);
+  const createStream = useCreateStream();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  // After creating a stream, show RTMP credentials
+  const [createdStream, setCreatedStream] = useState<{
+    stream_key: string;
+    rtmp_url: string;
+    stream_id: string;
+  } | null>(null);
+  const [copiedKey, setCopiedKey] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState(false);
+
+  const isOwner = community && user && community.owner_id === user.id;
+
+  const handleCreateStream = () => {
+    if (!title.trim() || !community) return;
+
+    createStream.mutate(
+      { title, description, community_id: community.id },
+      {
+        onSuccess: (data) => {
+          setTitle("");
+          setDescription("");
+          setDialogOpen(false);
+          setCreatedStream({
+            stream_key: data.stream_key,
+            rtmp_url: data.rtmp_url,
+            stream_id: data.stream_id,
+          });
+          toast({ title: "Stream created!", description: "Use the RTMP credentials to go live in OBS." });
+        },
+        onError: (error) => {
+          toast({ variant: "destructive", title: "Failed to create stream", description: error.message });
+        },
+      }
+    );
+  };
+
+  const copyToClipboard = (text: string, type: "key" | "url") => {
+    navigator.clipboard.writeText(text);
+    if (type === "key") {
+      setCopiedKey(true);
+      setTimeout(() => setCopiedKey(false), 2000);
+    } else {
+      setCopiedUrl(true);
+      setTimeout(() => setCopiedUrl(false), 2000);
+    }
+  };
 
   return (
     <CommunityLayout communityName={community?.name ?? "Community"}>
       <div className="px-4 py-4 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-lg">Streams</h2>
-          <Button size="sm" className="btn-primary-gradient text-sm font-semibold gap-1.5">
-            <Radio className="w-3.5 h-3.5" />
-            Go Live
-          </Button>
+          {isOwner && (
+            <Button
+              size="sm"
+              className="btn-primary-gradient text-sm font-semibold gap-1.5"
+              onClick={() => setDialogOpen(true)}
+            >
+              <Radio className="w-3.5 h-3.5" />
+              Go Live
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
@@ -36,16 +107,19 @@ const CommunityStreams = () => {
           <div className="text-center py-12">
             <Radio className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
             <p className="text-sm font-medium mb-1">No streams yet</p>
-            <p className="text-xs text-muted-foreground">Click "Go Live" to start your first stream!</p>
+            {isOwner && (
+              <p className="text-xs text-muted-foreground">Click "Go Live" to start your first stream!</p>
+            )}
           </div>
         ) : (
           <div className="space-y-3">
             {(streams ?? []).map((stream) => {
               const config = statusConfig[stream.status];
               return (
-                <div
+                <Link
                   key={stream.id}
-                  className="rounded-lg border border-border bg-card overflow-hidden card-interactive"
+                  to={`/c/${slug}/streams/${stream.id}`}
+                  className="block rounded-lg border border-border bg-card overflow-hidden card-interactive"
                 >
                   <div className="aspect-video bg-muted relative flex items-center justify-center">
                     {stream.status === "live" ? (
@@ -82,12 +156,97 @@ const CommunityStreams = () => {
                     <p className="text-sm text-muted-foreground mb-2">{stream.description}</p>
                     <p className="text-xs text-muted-foreground">{timeAgo(stream.created_at)}</p>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
         )}
       </div>
+
+      {/* Go Live Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Go Live</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Title</label>
+              <Input
+                placeholder="What are you streaming?"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Description</label>
+              <Textarea
+                placeholder="Tell your audience what to expect..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="btn-primary-gradient"
+              onClick={handleCreateStream}
+              disabled={!title.trim() || createStream.isPending}
+            >
+              {createStream.isPending ? "Creating..." : "Create Stream"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* RTMP Credentials Dialog */}
+      <Dialog open={!!createdStream} onOpenChange={() => setCreatedStream(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Stream Credentials</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <p className="text-sm text-muted-foreground">
+              Paste these into OBS (Settings &gt; Stream) to go live.
+            </p>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">RTMP URL</label>
+              <div className="flex gap-2">
+                <Input value={createdStream?.rtmp_url ?? ""} readOnly className="font-mono text-xs" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => copyToClipboard(createdStream?.rtmp_url ?? "", "url")}
+                >
+                  {copiedUrl ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Stream Key</label>
+              <div className="flex gap-2">
+                <Input value={createdStream?.stream_key ?? ""} readOnly className="font-mono text-xs" type="password" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => copyToClipboard(createdStream?.stream_key ?? "", "key")}
+                >
+                  {copiedKey ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Link to={`/c/${slug}/streams/${createdStream?.stream_id}`}>
+              <Button className="btn-primary-gradient">Go to Stream</Button>
+            </Link>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </CommunityLayout>
   );
 };
