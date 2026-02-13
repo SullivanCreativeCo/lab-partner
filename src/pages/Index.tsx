@@ -5,30 +5,44 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
 
+const DEMO_SLUG = "demo";
+
 const features = [
   {
     icon: Radio,
     title: "Live Streaming",
     description: "Go live exclusively for your community. No algorithms, no distractions.",
-    emphasis: true,
+    label: "CORE",
+    accent: "from-primary/20 to-accent/10",
+    borderAccent: "border-primary/25",
+    demoPath: `/c/${DEMO_SLUG}/streams`,
   },
   {
     icon: MessageSquare,
     title: "Discussions",
     description: "Reddit-style posts and comments. Your community drives the conversation.",
-    emphasis: false,
+    label: "ENGAGE",
+    accent: "from-accent/15 to-primary/10",
+    borderAccent: "border-accent/20",
+    demoPath: `/c/${DEMO_SLUG}/discussions`,
   },
   {
     icon: Users,
     title: "Lab Partners",
     description: "Turn followers into partners. Build real relationships, not vanity metrics.",
-    emphasis: false,
+    label: "GROW",
+    accent: "from-success/15 to-primary/10",
+    borderAccent: "border-success/20",
+    demoPath: `/c/${DEMO_SLUG}/members`,
   },
   {
     icon: Shield,
     title: "You Own It",
     description: "Your audience data. Your content. Your rules. No platform risk.",
-    emphasis: false,
+    label: "CONTROL",
+    accent: "from-secondary/15 to-accent/10",
+    borderAccent: "border-secondary/25",
+    demoPath: `/c/${DEMO_SLUG}/settings`,
   },
 ];
 
@@ -44,7 +58,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
+       <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
         <div className="container flex items-center justify-between h-14 px-4">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="Lab Partner" className="h-7 w-auto" />
@@ -88,7 +102,7 @@ const Index = () => {
       {/* Hero */}
       <section className="relative pt-24 pb-16 px-4">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/8 rounded-full blur-[120px]" />
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/8 blur-[120px]" />
         </div>
 
         <div className="relative container max-w-lg mx-auto text-center">
@@ -116,9 +130,9 @@ const Index = () => {
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Link to="/login">
+              <Link to={`/c/${DEMO_SLUG}`}>
                 <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-6">
-                  Join a Community
+                  See It In Action
                 </Button>
               </Link>
             </div>
@@ -126,7 +140,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features — asymmetric layout, reduced from 6 to 4 */}
+      {/* Features */}
       <section className="px-4 pb-20">
         <div className="container max-w-lg mx-auto">
           <h2 className="text-2xl font-bold tracking-tight mb-2 text-center">
@@ -137,33 +151,40 @@ const Index = () => {
           </p>
 
           <div className="space-y-3">
-            {/* Featured item — full width */}
-            <div className="p-5 rounded-lg border border-primary/20 bg-primary/5">
-              <Radio className="w-6 h-6 text-primary mb-3" />
-              <h3 className="text-base font-semibold mb-1">{features[0].title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {features[0].description}
-              </p>
-            </div>
-
-            {/* Remaining items — grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {features.slice(1).map((feature) => {
-                const Icon = feature.icon;
-                return (
-                  <div
-                    key={feature.title}
-                    className="p-4 rounded-lg border border-border bg-card"
+            {features.map((feature, i) => {
+              const Icon = feature.icon;
+              const isEven = i % 2 === 0;
+              return (
+                <Link key={feature.title} to={feature.demoPath}>
+                  <motion.div
+                    initial={{ opacity: 0, x: isEven ? -16 : 16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className={`group relative overflow-hidden border ${feature.borderAccent} bg-card/60 backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
                   >
-                    <Icon className="w-5 h-5 text-primary mb-3" />
-                    <h3 className="text-sm font-semibold mb-1">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
+                    {/* Gradient accent strip */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                    
+                    <div className="relative flex items-start gap-4 p-5">
+                      <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                        <Icon className="w-4.5 h-4.5 text-primary" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-[15px] font-semibold tracking-tight">{feature.title}</h3>
+                          <span className="text-[10px] font-bold tracking-widest text-muted-foreground/60 uppercase">{feature.label}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {feature.description}
+                        </p>
+                      </div>
+                      <ArrowRight className="flex-shrink-0 w-4 h-4 text-muted-foreground/30 mt-1 transition-all duration-300 group-hover:text-primary group-hover:translate-x-1" />
+                    </div>
+                  </motion.div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -171,7 +192,7 @@ const Index = () => {
       {/* CTA */}
       <section className="px-4 pb-20">
         <div className="container max-w-lg mx-auto text-center">
-          <div className="p-8 rounded-lg border border-primary/20 bg-primary/5">
+          <div className="p-8 border border-primary/20 bg-primary/5">
             <h2 className="text-2xl font-bold tracking-tight mb-2">
               Ready to own your audience?
             </h2>
