@@ -96,7 +96,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features — asymmetric layout, reduced from 6 to 4 */}
+      {/* Features */}
       <section className="px-4 pb-20">
         <div className="container max-w-lg mx-auto">
           <h2 className="text-2xl font-bold tracking-tight mb-2 text-center">
@@ -106,34 +106,31 @@ const Index = () => {
             Everything you need to own your audience.
           </p>
 
-          <div className="space-y-3">
-            {/* Featured item — full width */}
-            <div className="p-5 rounded-lg border border-primary/20 bg-primary/5">
-              <Radio className="w-6 h-6 text-primary mb-3" />
-              <h3 className="text-base font-semibold mb-1">{features[0].title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {features[0].description}
-              </p>
-            </div>
-
-            {/* Remaining items — grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {features.slice(1).map((feature) => {
-                const Icon = feature.icon;
-                return (
-                  <div
-                    key={feature.title}
-                    className="p-4 rounded-lg border border-border bg-card"
-                  >
-                    <Icon className="w-5 h-5 text-primary mb-3" />
-                    <h3 className="text-sm font-semibold mb-1">{feature.title}</h3>
+          <div className="space-y-2">
+            {features.map((feature, i) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ scale: 1.015 }}
+                  className="group relative flex items-start gap-4 p-4 rounded-lg border border-border/60 bg-card/50 backdrop-blur-sm cursor-default transition-colors hover:border-primary/30 hover:bg-primary/[0.03]"
+                >
+                  <div className="flex-shrink-0 mt-0.5 w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center transition-colors group-hover:bg-primary/15">
+                    <Icon className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-semibold tracking-tight mb-0.5">{feature.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
-                );
-              })}
-            </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
