@@ -82,12 +82,12 @@ const Index = () => {
             <img src={logo} alt="Lab Partner" className="h-48 w-auto mx-auto mb-6" />
 
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-4">
-              Stop renting
+              Your audience.
               <br />
-              <span className="text-gradient">your audience</span>
+              Your platform.
             </h1>
 
-            <p className="text-muted-foreground text-base leading-relaxed mb-8 max-w-sm mx-auto">
+            <p className="text-foreground text-base leading-relaxed mb-8 max-w-sm mx-auto">
               Turn followers into partners. Stream live, spark discussions, and build a community you actually own.
             </p>
 
