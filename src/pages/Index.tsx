@@ -44,7 +44,7 @@ const Index = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 glass-strong safe-bottom">
         <div className="container flex items-center justify-between h-14 px-4">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Lab Partner" className="h-8 w-auto" />
+            <img src={logo} alt="Lab Partner" className="h-12 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
             <Link to="/login">
@@ -78,6 +78,8 @@ const Index = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
               Now in beta
             </div>
+
+            <img src={logo} alt="Lab Partner" className="h-24 w-auto mx-auto mb-6" />
 
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-4">
               Stop renting
