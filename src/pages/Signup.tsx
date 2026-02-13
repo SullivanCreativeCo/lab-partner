@@ -79,12 +79,12 @@ const Signup = () => {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-11 text-sm font-semibold gap-2">
+            <Button type="submit" className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2">
               Create account
               <ArrowRight className="w-4 h-4" />
             </Button>
 
-            <p className="text-[11px] text-muted-foreground text-center leading-relaxed">
+            <p className="text-xs text-muted-foreground text-center leading-relaxed">
               By creating an account you agree to our Terms of Service and Privacy Policy
             </p>
           </form>

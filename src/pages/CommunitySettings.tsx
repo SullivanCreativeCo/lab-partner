@@ -1,5 +1,4 @@
 import CommunityLayout from "@/components/CommunityLayout";
-import { motion } from "framer-motion";
 import { Palette, Type, Upload, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,11 +18,7 @@ const CommunitySettings = () => {
         <h2 className="font-semibold text-lg">Settings</h2>
 
         {/* General */}
-        <motion.section
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-4"
-        >
+        <section className="space-y-4">
           <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">General</h3>
           <div className="space-y-3">
             <div className="space-y-2">
@@ -39,15 +34,10 @@ const CommunitySettings = () => {
               />
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Branding */}
-        <motion.section
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="space-y-4"
-        >
+        <section className="space-y-4">
           <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
             <Palette className="w-3.5 h-3.5" />
             Branding
@@ -57,12 +47,12 @@ const CommunitySettings = () => {
           <div className="space-y-2">
             <Label className="text-sm">Logo</Label>
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl border-2 border-dashed border-border flex items-center justify-center bg-muted/30">
+              <div className="w-16 h-16 rounded-lg border-2 border-dashed border-border flex items-center justify-center bg-muted/30">
                 <Upload className="w-5 h-5 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">PNG, JPG up to 2MB</p>
-                <Button variant="outline" size="sm" className="mt-1.5 text-xs">
+                <p className="text-sm text-muted-foreground">PNG, JPG up to 2MB</p>
+                <Button variant="outline" size="sm" className="mt-1.5 text-sm">
                   Upload
                 </Button>
               </div>
@@ -81,7 +71,7 @@ const CommunitySettings = () => {
                 <Input
                   value={primaryColor}
                   onChange={(e) => setPrimaryColor(e.target.value)}
-                  className="h-9 bg-muted/50 text-xs font-mono"
+                  className="h-9 bg-muted/50 text-sm font-mono"
                 />
               </div>
             </div>
@@ -95,48 +85,48 @@ const CommunitySettings = () => {
                 <Input
                   value={secondaryColor}
                   onChange={(e) => setSecondaryColor(e.target.value)}
-                  className="h-9 bg-muted/50 text-xs font-mono"
+                  className="h-9 bg-muted/50 text-sm font-mono"
                 />
               </div>
             </div>
           </div>
 
           {/* Preview */}
-          <div className="rounded-xl border border-border p-4 bg-card">
+          <div className="rounded-lg border border-border p-4 bg-card">
             <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1.5">
               <Type className="w-3 h-3" />
               Preview
             </p>
             <div className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold"
+                className="w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold"
                 style={{ backgroundColor: primaryColor + "20", color: primaryColor }}
               >
                 {name[0]}
               </div>
               <div>
                 <p className="text-sm font-semibold">{name}</p>
-                <p className="text-[10px] text-muted-foreground">Your branded community</p>
+                <p className="text-xs text-muted-foreground">Your branded community</p>
               </div>
             </div>
             <div className="flex gap-2 mt-3">
               <div
-                className="h-8 flex-1 rounded-lg flex items-center justify-center text-xs font-semibold"
+                className="h-8 flex-1 rounded-md flex items-center justify-center text-sm font-semibold"
                 style={{ backgroundColor: primaryColor, color: "white" }}
               >
                 Primary
               </div>
               <div
-                className="h-8 flex-1 rounded-lg flex items-center justify-center text-xs font-semibold"
+                className="h-8 flex-1 rounded-md flex items-center justify-center text-sm font-semibold"
                 style={{ backgroundColor: secondaryColor, color: "white" }}
               >
                 Secondary
               </div>
             </div>
           </div>
-        </motion.section>
+        </section>
 
-        <Button className="w-full h-11 text-sm font-semibold gap-2">
+        <Button className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2">
           <Save className="w-4 h-4" />
           Save Changes
         </Button>

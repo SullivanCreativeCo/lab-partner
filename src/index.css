@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,38 +6,38 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 25% 10%;
+    --background: 210 17% 97%;
+    --foreground: 220 26% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 10%;
+    --card-foreground: 220 26% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 10%;
+    --popover-foreground: 220 26% 14%;
 
     --primary: 214 84% 56%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 224 35% 52%;
+    --secondary: 224 35% 48%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 220 14% 92%;
-    --muted-foreground: 220 10% 46%;
+    --muted-foreground: 215 14% 46%;
 
-    --accent: 194 82% 63%;
-    --accent-foreground: 220 25% 10%;
+    --accent: 199 89% 64%;
+    --accent-foreground: 220 26% 14%;
 
-    --destructive: 0 72% 63%;
+    --destructive: 0 69% 67%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 145 50% 50%;
     --success-foreground: 0 0% 100%;
 
-    --border: 220 13% 88%;
-    --input: 220 13% 88%;
+    --border: 214 20% 88%;
+    --input: 214 20% 88%;
     --ring: 214 84% 56%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -50,44 +50,44 @@
   }
 
   .dark {
-    --background: 228 18% 8%;
-    --foreground: 220 15% 92%;
+    --background: 210 16% 5%;
+    --foreground: 210 20% 97%;
 
-    --card: 228 16% 12%;
-    --card-foreground: 220 15% 92%;
+    --card: 213 14% 10%;
+    --card-foreground: 210 20% 97%;
 
-    --popover: 228 16% 12%;
-    --popover-foreground: 220 15% 92%;
+    --popover: 213 14% 10%;
+    --popover-foreground: 210 20% 97%;
 
     --primary: 214 84% 56%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 224 35% 52%;
+    --secondary: 224 35% 48%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 228 14% 18%;
-    --muted-foreground: 220 10% 55%;
+    --muted: 213 12% 16%;
+    --muted-foreground: 214 12% 63%;
 
-    --accent: 194 82% 63%;
-    --accent-foreground: 228 18% 8%;
+    --accent: 199 89% 64%;
+    --accent-foreground: 210 16% 5%;
 
-    --destructive: 0 72% 50%;
+    --destructive: 0 69% 55%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 145 50% 45%;
     --success-foreground: 0 0% 100%;
 
-    --border: 228 12% 20%;
-    --input: 228 12% 20%;
+    --border: 215 14% 18%;
+    --input: 215 14% 18%;
     --ring: 214 84% 56%;
 
-    --sidebar-background: 228 18% 6%;
-    --sidebar-foreground: 220 15% 85%;
+    --sidebar-background: 210 16% 4%;
+    --sidebar-foreground: 210 15% 85%;
     --sidebar-primary: 214 84% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 228 14% 16%;
-    --sidebar-accent-foreground: 220 15% 85%;
-    --sidebar-border: 228 12% 18%;
+    --sidebar-accent: 213 12% 14%;
+    --sidebar-accent-foreground: 210 15% 85%;
+    --sidebar-border: 215 14% 16%;
     --sidebar-ring: 214 84% 56%;
   }
 }
@@ -102,7 +102,8 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 600;
   }
 }
 
@@ -121,5 +122,35 @@
 
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .btn-primary-gradient {
+    background: linear-gradient(90deg, #2F80ED 0%, #4169B5 100%);
+  }
+
+  .btn-primary-gradient:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(47, 128, 237, 0.3);
+  }
+
+  .card-interactive {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .post-card {
+    border-left: 4px solid hsl(var(--primary));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

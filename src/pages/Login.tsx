@@ -71,7 +71,7 @@ const Login = () => {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-11 text-sm font-semibold gap-2">
+            <Button type="submit" className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2">
               Log in
               <ArrowRight className="w-4 h-4" />
             </Button>

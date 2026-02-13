@@ -1,73 +1,159 @@
-# Welcome to your Lovable project
+# Lab Partner
 
-## Project info
+**Your Audience. Your Platform.**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Lab Partner is a white-label community platform that enables influencers to own their audience through live streaming, Reddit-style discussions, and member engagement tools. Each influencer gets their own branded instance where they can stream exclusively to their "Lab Partners" (members) and foster real discussions.
 
-## How can I edit this code?
+Built by [Keegareaux Labs](https://github.com/sullivancreativeco).
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **Branded Communities** — Custom colors, logo, and slug (`/c/your-name`)
+- **Live Streaming** — Go live via Mux with RTMP credentials, VOD replay
+- **Discussions** — Reddit-style posts with flat comments and upvoting
+- **Member Management** — Invite Lab Partners, assign roles (owner/mod/member)
+- **Real-time Updates** — Live post and comment feeds via Supabase Realtime
+- **Mobile-first** — Bottom tab navigation, responsive layout, safe area support
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18 + Vite + TypeScript |
+| Routing | React Router DOM 6 |
+| Styling | TailwindCSS + shadcn/ui |
+| Auth | Supabase Auth |
+| Database | Supabase (PostgreSQL) |
+| Real-time | Supabase Realtime |
+| Storage | Supabase Storage |
+| Streaming | Mux API + Mux Player |
+| Hosting | Vercel |
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+- [Supabase](https://supabase.com) project
+- [Mux](https://mux.com) account
+
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repository
+git clone https://github.com/sullivancreativeco/lab-partner.git
+cd lab-partner
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Copy environment variables
+cp .env.local.example .env.local
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Add your credentials to `.env.local`:
 
-**Use GitHub Codespaces**
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+MUX_TOKEN_ID=your_mux_token_id
+MUX_TOKEN_SECRET=your_mux_token_secret
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Development
 
-## What technologies are used for this project?
+```sh
+# Start dev server
+npm run dev
 
-This project is built with:
+# Run tests
+npm test
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Lint
+npm run lint
 
-## How can I deploy this project?
+# Production build
+npm run build
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+The dev server runs at **http://localhost:8080**.
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## Project Structure
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+src/
+├── pages/              # Route pages
+│   ├── Index.tsx       # Landing page
+│   ├── Login.tsx       # Authentication
+│   ├── Signup.tsx
+│   ├── CreateCommunity.tsx
+│   ├── CommunityHome.tsx
+│   ├── CommunityStreams.tsx
+│   ├── CommunityDiscussions.tsx
+│   ├── PostDetail.tsx
+│   ├── CommunityMembers.tsx
+│   └── CommunitySettings.tsx
+├── components/
+│   ├── CommunityLayout.tsx   # Shared community layout
+│   ├── NavLink.tsx
+│   └── ui/                   # shadcn/ui components
+├── hooks/              # Custom React hooks
+├── lib/                # Utilities
+└── assets/             # Static assets
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## Routes
+
+| Path | Description |
+|------|-------------|
+| `/` | Landing page |
+| `/login` | Login |
+| `/signup` | Sign up |
+| `/create-community` | Create a new community |
+| `/c/:slug` | Community home |
+| `/c/:slug/streams` | Streams (live, upcoming, replays) |
+| `/c/:slug/discussions` | Discussion posts |
+| `/c/:slug/discussions/:postId` | Post detail + comments |
+| `/c/:slug/members` | Member list |
+| `/c/:slug/settings` | Community settings (owner only) |
+
+---
+
+## Documentation
+
+Planning docs are in the [`docs/`](docs/) directory:
+
+- [Product Requirements (PRD)](docs/lab-partner-prd.md)
+- [Technical Spec](docs/lab-partner-technical-spec.md)
+- [Brand Guidelines](docs/lab-partner-brand-guidelines.md)
+- [Feature Roadmap](docs/lab-partner-roadmap.md)
+- [Go-to-Market Plan](docs/lab-partner-gtm-plan.md)
+- [Loveable Prompt](docs/lab-partner-loveable-prompt.md)
+
+---
+
+## Development Status
+
+**Current phase:** MVP Foundation — migrating from Loveable prototype to production codebase via Claude Code.
+
+See [claude_context.md](claude_context.md) for detailed audit of current state, known issues, and technical debt.
+
+---
+
+## License
+
+Private — All rights reserved. Keegareaux Labs.

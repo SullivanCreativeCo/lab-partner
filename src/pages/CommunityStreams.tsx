@@ -1,5 +1,4 @@
 import CommunityLayout from "@/components/CommunityLayout";
-import { motion } from "framer-motion";
 import { Radio, Play, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -50,24 +49,20 @@ const CommunityStreams = () => {
       <div className="px-4 py-4 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-lg">Streams</h2>
-          <Button size="sm" className="text-xs font-semibold gap-1.5">
+          <Button size="sm" className="btn-primary-gradient text-sm font-semibold gap-1.5">
             <Radio className="w-3.5 h-3.5" />
             Go Live
           </Button>
         </div>
 
         <div className="space-y-3">
-          {streams.map((stream, i) => {
+          {streams.map((stream) => {
             const config = statusConfig[stream.status];
             return (
-              <motion.div
+              <div
                 key={stream.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="rounded-xl border border-border bg-card overflow-hidden"
+                className="rounded-lg border border-border bg-card overflow-hidden card-interactive"
               >
-                {/* Thumbnail placeholder */}
                 <div className="aspect-video bg-muted relative flex items-center justify-center">
                   {stream.status === "live" ? (
                     <div className="absolute inset-0 bg-primary/5 flex items-center justify-center">
@@ -84,26 +79,26 @@ const CommunityStreams = () => {
                   )}
 
                   <div className="absolute top-3 left-3">
-                    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-semibold ${config.className}`}>
+                    <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-semibold ${config.className}`}>
                       {config.dot && <span className="w-1.5 h-1.5 rounded-full bg-destructive animate-pulse" />}
                       {config.label}
                     </span>
                   </div>
 
                   {stream.viewers > 0 && (
-                    <div className="absolute top-3 right-3 flex items-center gap-1 text-[10px] text-muted-foreground bg-card/60 backdrop-blur px-2 py-1 rounded-full">
+                    <div className="absolute top-3 right-3 flex items-center gap-1 text-xs text-muted-foreground bg-card/60 backdrop-blur px-2 py-1 rounded-full">
                       <Users className="w-3 h-3" />
                       {stream.viewers}
                     </div>
                   )}
                 </div>
 
-                <div className="p-3.5">
-                  <h3 className="font-semibold text-sm mb-0.5">{stream.title}</h3>
-                  <p className="text-xs text-muted-foreground mb-2">{stream.description}</p>
-                  <p className="text-[10px] text-muted-foreground">{stream.time}</p>
+                <div className="p-4">
+                  <h3 className="font-semibold text-base mb-0.5">{stream.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-2">{stream.description}</p>
+                  <p className="text-xs text-muted-foreground">{stream.time}</p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>

@@ -1,5 +1,4 @@
 import CommunityLayout from "@/components/CommunityLayout";
-import { motion } from "framer-motion";
 import { Crown, Shield, MoreHorizontal } from "lucide-react";
 
 const members = [
@@ -26,20 +25,17 @@ const CommunityMembers = () => {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-lg">Lab Partners</h2>
-            <p className="text-xs text-muted-foreground">{members.length} members</p>
+            <p className="text-sm text-muted-foreground">{members.length} members</p>
           </div>
         </div>
 
         <div className="space-y-1">
-          {members.map((member, i) => {
+          {members.map((member) => {
             const config = roleConfig[member.role as keyof typeof roleConfig];
             return (
-              <motion.div
+              <div
                 key={member.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.03 }}
-                className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-colors"
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
               >
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary flex-shrink-0">
                   {member.avatar}
@@ -51,12 +47,12 @@ const CommunityMembers = () => {
                       <config.icon className={`w-3.5 h-3.5 ${config.className}`} />
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground">Joined {member.joinedAgo}</p>
+                  <p className="text-xs text-muted-foreground">Joined {member.joinedAgo}</p>
                 </div>
                 <button className="text-muted-foreground hover:text-foreground transition-colors p-1">
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
-              </motion.div>
+              </div>
             );
           })}
         </div>

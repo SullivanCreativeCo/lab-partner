@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import logo from "@/assets/logo.png";
 
 const CreateCommunity = () => {
   const [name, setName] = useState("");
@@ -20,11 +21,11 @@ const CreateCommunity = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <div className="p-4 flex items-center justify-between">
-        <Link to="/" className="font-display text-lg font-bold tracking-tight">
-          lab<span className="text-primary">partner</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img src={logo} alt="Lab Partner" className="h-8 w-auto" />
         </Link>
-        <Link to="/" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-          <ArrowLeft className="w-3 h-3" />
+        <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+          <ArrowLeft className="w-3.5 h-3.5" />
           Back
         </Link>
       </div>
@@ -75,7 +76,7 @@ const CreateCommunity = () => {
                 onChange={(e) => setWelcome(e.target.value)}
                 className="bg-muted/50 border-border min-h-[80px] resize-none"
               />
-              <p className="text-[10px] text-muted-foreground">Shown to new members when they join</p>
+              <p className="text-xs text-muted-foreground">Shown to new members when they join</p>
             </div>
 
             {/* Preview */}
@@ -83,16 +84,16 @@ const CreateCommunity = () => {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                className="rounded-xl border border-border bg-card p-4"
+                className="rounded-lg border border-border bg-card p-4"
               >
-                <p className="text-[10px] text-muted-foreground mb-2 uppercase tracking-wider font-semibold">Preview</p>
+                <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider font-semibold">Preview</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-display font-bold text-sm">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
                     {name[0]?.toUpperCase()}
                   </div>
                   <div>
                     <p className="text-sm font-semibold">{name}</p>
-                    <p className="text-[10px] text-muted-foreground">labpartner.app/c/{slug || "..."}</p>
+                    <p className="text-xs text-muted-foreground">labpartner.app/c/{slug || "..."}</p>
                   </div>
                 </div>
               </motion.div>
@@ -101,7 +102,7 @@ const CreateCommunity = () => {
             <Link to={slug ? `/c/${slug}` : "#"}>
               <Button
                 type="submit"
-                className="w-full h-11 text-sm font-semibold gap-2 mt-2"
+                className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2 mt-2"
                 disabled={!name || !slug}
               >
                 Create Lab
