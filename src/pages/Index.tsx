@@ -9,25 +9,33 @@ const features = [
     icon: Radio,
     title: "Live Streaming",
     description: "Go live exclusively for your community. No algorithms, no distractions.",
-    emphasis: true,
+    label: "CORE",
+    accent: "from-primary/20 to-accent/10",
+    borderAccent: "border-primary/25",
   },
   {
     icon: MessageSquare,
     title: "Discussions",
     description: "Reddit-style posts and comments. Your community drives the conversation.",
-    emphasis: false,
+    label: "ENGAGE",
+    accent: "from-accent/15 to-primary/10",
+    borderAccent: "border-accent/20",
   },
   {
     icon: Users,
     title: "Lab Partners",
     description: "Turn followers into partners. Build real relationships, not vanity metrics.",
-    emphasis: false,
+    label: "GROW",
+    accent: "from-success/15 to-primary/10",
+    borderAccent: "border-success/20",
   },
   {
     icon: Shield,
     title: "You Own It",
     description: "Your audience data. Your content. Your rules. No platform risk.",
-    emphasis: false,
+    label: "CONTROL",
+    accent: "from-secondary/15 to-accent/10",
+    borderAccent: "border-secondary/25",
   },
 ];
 
@@ -106,27 +114,36 @@ const Index = () => {
             Everything you need to own your audience.
           </p>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {features.map((feature, i) => {
               const Icon = feature.icon;
+              const isEven = i % 2 === 0;
               return (
                 <motion.div
                   key={feature.title}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: isEven ? -16 : 16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={{ scale: 1.015 }}
-                  className="group relative flex items-start gap-4 p-4 rounded-lg border border-border/60 bg-card/50 backdrop-blur-sm cursor-default transition-colors hover:border-primary/30 hover:bg-primary/[0.03]"
+                  transition={{ duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  className={`group relative overflow-hidden rounded-xl border ${feature.borderAccent} bg-card/60 backdrop-blur-sm cursor-default transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
                 >
-                  <div className="flex-shrink-0 mt-0.5 w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center transition-colors group-hover:bg-primary/15">
-                    <Icon className="w-4 h-4 text-primary" />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-semibold tracking-tight mb-0.5">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
+                  {/* Gradient accent strip */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  
+                  <div className="relative flex items-start gap-4 p-5">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                      <Icon className="w-4.5 h-4.5 text-primary" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-[15px] font-semibold tracking-tight">{feature.title}</h3>
+                        <span className="text-[10px] font-bold tracking-widest text-muted-foreground/60 uppercase">{feature.label}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
+                    <ArrowRight className="flex-shrink-0 w-4 h-4 text-muted-foreground/30 mt-1 transition-all duration-300 group-hover:text-primary group-hover:translate-x-1" />
                   </div>
                 </motion.div>
               );
