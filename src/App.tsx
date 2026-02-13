@@ -4,6 +4,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import CreateCommunity from "./pages/CreateCommunity";
+import CommunityHome from "./pages/CommunityHome";
+import CommunityStreams from "./pages/CommunityStreams";
+import CommunityDiscussions from "./pages/CommunityDiscussions";
+import CommunityMembers from "./pages/CommunityMembers";
+import CommunitySettings from "./pages/CommunitySettings";
+import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -14,11 +23,21 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="dark">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/create-community" element={<CreateCommunity />} />
+            <Route path="/c/:slug" element={<CommunityHome />} />
+            <Route path="/c/:slug/streams" element={<CommunityStreams />} />
+            <Route path="/c/:slug/discussions" element={<CommunityDiscussions />} />
+            <Route path="/c/:slug/discussions/:postId" element={<PostDetail />} />
+            <Route path="/c/:slug/members" element={<CommunityMembers />} />
+            <Route path="/c/:slug/settings" element={<CommunitySettings />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
