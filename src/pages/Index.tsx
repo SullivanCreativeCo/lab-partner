@@ -82,9 +82,9 @@ const Index = () => {
             <img src={logo} alt="Lab Partner" className="h-48 w-auto mx-auto mb-6" />
 
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-4">
-              Your audience.
+              Your Audience.
               <br />
-              Your platform.
+              Your Platform.
             </h1>
 
             <p className="text-foreground text-base leading-relaxed mb-8 max-w-sm mx-auto">
