@@ -3,9 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Radio, MessageSquare, Users, Shield, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserCommunities } from "@/hooks/use-community";
 import logo from "@/assets/logo.png";
-
-const DEMO_SLUG = "demo";
 
 const features = [
   {
@@ -15,7 +14,6 @@ const features = [
     label: "CORE",
     accent: "from-primary/20 to-accent/10",
     borderAccent: "border-primary/25",
-    demoPath: `/c/${DEMO_SLUG}/streams`,
   },
   {
     icon: MessageSquare,
@@ -24,7 +22,6 @@ const features = [
     label: "ENGAGE",
     accent: "from-accent/15 to-primary/10",
     borderAccent: "border-accent/20",
-    demoPath: `/c/${DEMO_SLUG}/discussions`,
   },
   {
     icon: Users,
@@ -33,7 +30,6 @@ const features = [
     label: "GROW",
     accent: "from-success/15 to-primary/10",
     borderAccent: "border-success/20",
-    demoPath: `/c/${DEMO_SLUG}/members`,
   },
   {
     icon: Shield,
@@ -42,18 +38,23 @@ const features = [
     label: "CONTROL",
     accent: "from-secondary/15 to-accent/10",
     borderAccent: "border-secondary/25",
-    demoPath: `/c/${DEMO_SLUG}/settings`,
   },
 ];
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const { data: communities } = useUserCommunities(user?.id);
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
+
+  // Where to send logged-in users — their first community or create one
+  const dashboardPath = communities && communities.length > 0
+    ? `/c/${communities[0].slug}`
+    : "/create-community";
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -66,9 +67,9 @@ const Index = () => {
           <div className="flex items-center gap-2">
             {user ? (
               <>
-                <Link to="/create-community">
+                <Link to={dashboardPath}>
                   <Button size="sm" className="btn-primary-gradient text-sm font-medium">
-                    Create Lab
+                    My Lab
                   </Button>
                 </Link>
                 <Button
@@ -124,15 +125,10 @@ const Index = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/signup">
+              <Link to={user ? dashboardPath : "/signup"}>
                 <Button size="lg" className="w-full sm:w-auto btn-primary-gradient text-base font-semibold gap-2 h-12 px-6">
-                  Create Your Lab
+                  {user ? "Go to My Lab" : "Create Your Lab"}
                   <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to={`/c/${DEMO_SLUG}`}>
-                <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-6">
-                  See It In Action
                 </Button>
               </Link>
             </div>
@@ -155,34 +151,32 @@ const Index = () => {
               const Icon = feature.icon;
               const isEven = i % 2 === 0;
               return (
-                <Link key={feature.title} to={feature.demoPath}>
-                  <motion.div
-                    initial={{ opacity: 0, x: isEven ? -16 : 16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className={`group relative overflow-hidden border ${feature.borderAccent} bg-card/60 backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
-                  >
-                    {/* Gradient accent strip */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                    
-                    <div className="relative flex items-start gap-4 p-5">
-                      <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-                        <Icon className="w-4.5 h-4.5 text-primary" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-[15px] font-semibold tracking-tight">{feature.title}</h3>
-                          <span className="text-[10px] font-bold tracking-widest text-muted-foreground/60 uppercase">{feature.label}</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {feature.description}
-                        </p>
-                      </div>
-                      <ArrowRight className="flex-shrink-0 w-4 h-4 text-muted-foreground/30 mt-1 transition-all duration-300 group-hover:text-primary group-hover:translate-x-1" />
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, x: isEven ? -16 : 16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  className={`group relative overflow-hidden border ${feature.borderAccent} bg-card/60 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
+                >
+                  {/* Gradient accent strip */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+                  <div className="relative flex items-start gap-4 p-5">
+                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                      <Icon className="w-4.5 h-4.5 text-primary" />
                     </div>
-                  </motion.div>
-                </Link>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-[15px] font-semibold tracking-tight">{feature.title}</h3>
+                        <span className="text-[10px] font-bold tracking-widest text-muted-foreground/60 uppercase">{feature.label}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
@@ -199,9 +193,9 @@ const Index = () => {
             <p className="text-muted-foreground text-base mb-6">
               Create your Lab in under 2 minutes. Free to start.
             </p>
-            <Link to="/signup">
+            <Link to={user ? dashboardPath : "/signup"}>
               <Button size="lg" className="btn-primary-gradient text-base font-semibold gap-2 h-12 px-8">
-                Get Started Free
+                {user ? "Go to My Lab" : "Get Started Free"}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>

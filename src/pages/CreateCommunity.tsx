@@ -80,11 +80,21 @@ const CreateCommunity = () => {
     }
 
     // Add creator as owner member
-    await supabase.from("community_members").insert({
+    const { error: memberError } = await supabase.from("community_members").insert({
       community_id: community.id,
       user_id: user.id,
       role: "owner" as const,
     });
+
+    if (memberError) {
+      setLoading(false);
+      toast({
+        variant: "destructive",
+        title: "Failed to add you as a member",
+        description: memberError.message,
+      });
+      return;
+    }
 
     setLoading(false);
     navigate(`/c/${slug}`);

@@ -37,7 +37,18 @@ const Login = () => {
       return;
     }
 
-    navigate("/");
+    // Redirect to user's community or create one
+    const { data: communities } = await supabase
+      .from("communities")
+      .select("slug")
+      .eq("owner_id", (await supabase.auth.getUser()).data.user?.id ?? "")
+      .limit(1);
+
+    if (communities && communities.length > 0) {
+      navigate(`/c/${communities[0].slug}`);
+    } else {
+      navigate("/create-community");
+    }
   };
 
   return (
@@ -55,6 +66,8 @@ const Login = () => {
           transition={{ duration: 0.4 }}
           className="w-full max-w-sm"
         >
+          <img src={logo} alt="Lab Partner" className="h-16 w-auto mb-8" />
+
           <h1 className="text-2xl font-bold tracking-tight mb-1">Welcome back</h1>
           <p className="text-sm text-muted-foreground mb-8">
             Log in to your Lab Partner account

@@ -22,7 +22,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -37,6 +37,15 @@ const Signup = () => {
         variant: "destructive",
         title: "Signup failed",
         description: error.message,
+      });
+      return;
+    }
+
+    // If email confirmation is enabled, there's no session yet
+    if (!data.session) {
+      toast({
+        title: "Check your email",
+        description: "We sent you a confirmation link. Click it to activate your account.",
       });
       return;
     }
@@ -63,6 +72,8 @@ const Signup = () => {
           transition={{ duration: 0.4 }}
           className="w-full max-w-sm"
         >
+          <img src={logo} alt="Lab Partner" className="h-16 w-auto mb-8" />
+
           <h1 className="text-2xl font-bold tracking-tight mb-1">Create your account</h1>
           <p className="text-sm text-muted-foreground mb-8">
             Start building your community today

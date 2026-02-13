@@ -25,7 +25,7 @@ const CommunityDiscussions = () => {
   const { slug } = useParams();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { data: community } = useCommunityBySlug(slug);
+  const { data: community, isLoading: communityLoading, error: communityError } = useCommunityBySlug(slug);
   const { data: posts, isLoading } = usePosts(community?.id);
   const createPost = useCreatePost();
   const [sort, setSort] = useState<SortMode>("hot");
@@ -40,7 +40,16 @@ const CommunityDiscussions = () => {
   });
 
   const handleCreatePost = async () => {
-    if (!newTitle.trim() || !community || !user) return;
+    if (!newTitle.trim()) return;
+    if (!community) {
+      toast({ variant: "destructive", title: "Error", description: "Community not loaded yet. Please wait and try again." });
+      return;
+    }
+    if (!user) {
+      toast({ variant: "destructive", title: "Error", description: "You must be logged in to post." });
+      return;
+    }
+
     createPost.mutate(
       {
         community_id: community.id,
@@ -65,6 +74,18 @@ const CommunityDiscussions = () => {
       }
     );
   };
+
+  if (communityError) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="text-center">
+          <h1 className="text-xl font-bold mb-2">Community not found</h1>
+          <p className="text-sm text-muted-foreground mb-4">The community "{slug}" doesn't exist.</p>
+          <Link to="/" className="text-primary text-sm hover:underline">Go home</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <CommunityLayout communityName={community?.name ?? "Community"}>
@@ -104,9 +125,9 @@ const CommunityDiscussions = () => {
                 <Button
                   onClick={handleCreatePost}
                   className="w-full h-11 btn-primary-gradient text-sm font-semibold"
-                  disabled={!newTitle.trim() || createPost.isPending}
+                  disabled={!newTitle.trim() || createPost.isPending || communityLoading || !community}
                 >
-                  {createPost.isPending ? "Posting..." : "Post"}
+                  {communityLoading ? "Loading..." : createPost.isPending ? "Posting..." : "Post"}
                 </Button>
               </div>
             </DialogContent>
