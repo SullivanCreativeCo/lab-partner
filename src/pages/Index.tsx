@@ -4,6 +4,8 @@ import { ArrowRight, Radio, MessageSquare, Users, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
+const DEMO_SLUG = "demo";
+
 const features = [
   {
     icon: Radio,
@@ -12,6 +14,7 @@ const features = [
     label: "CORE",
     accent: "from-primary/20 to-accent/10",
     borderAccent: "border-primary/25",
+    demoPath: `/c/${DEMO_SLUG}/streams`,
   },
   {
     icon: MessageSquare,
@@ -20,6 +23,7 @@ const features = [
     label: "ENGAGE",
     accent: "from-accent/15 to-primary/10",
     borderAccent: "border-accent/20",
+    demoPath: `/c/${DEMO_SLUG}/discussions`,
   },
   {
     icon: Users,
@@ -28,6 +32,7 @@ const features = [
     label: "GROW",
     accent: "from-success/15 to-primary/10",
     borderAccent: "border-success/20",
+    demoPath: `/c/${DEMO_SLUG}/members`,
   },
   {
     icon: Shield,
@@ -36,6 +41,7 @@ const features = [
     label: "CONTROL",
     accent: "from-secondary/15 to-accent/10",
     borderAccent: "border-secondary/25",
+    demoPath: `/c/${DEMO_SLUG}/settings`,
   },
 ];
 
@@ -94,9 +100,9 @@ const Index = () => {
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Link to="/login">
+              <Link to={`/c/${DEMO_SLUG}`}>
                 <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-6">
-                  Join a Community
+                  See It In Action
                 </Button>
               </Link>
             </div>
@@ -119,33 +125,34 @@ const Index = () => {
               const Icon = feature.icon;
               const isEven = i % 2 === 0;
               return (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, x: isEven ? -16 : 16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className={`group relative overflow-hidden border ${feature.borderAccent} bg-card/60 backdrop-blur-sm cursor-default transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
-                >
-                  {/* Gradient accent strip */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  
-                  <div className="relative flex items-start gap-4 p-5">
-                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
-                      <Icon className="w-4.5 h-4.5 text-primary" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-[15px] font-semibold tracking-tight">{feature.title}</h3>
-                        <span className="text-[10px] font-bold tracking-widest text-muted-foreground/60 uppercase">{feature.label}</span>
+                <Link key={feature.title} to={feature.demoPath}>
+                  <motion.div
+                    initial={{ opacity: 0, x: isEven ? -16 : 16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className={`group relative overflow-hidden border ${feature.borderAccent} bg-card/60 backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
+                  >
+                    {/* Gradient accent strip */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                    
+                    <div className="relative flex items-start gap-4 p-5">
+                      <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                        <Icon className="w-4.5 h-4.5 text-primary" />
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {feature.description}
-                      </p>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-[15px] font-semibold tracking-tight">{feature.title}</h3>
+                          <span className="text-[10px] font-bold tracking-widest text-muted-foreground/60 uppercase">{feature.label}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {feature.description}
+                        </p>
+                      </div>
+                      <ArrowRight className="flex-shrink-0 w-4 h-4 text-muted-foreground/30 mt-1 transition-all duration-300 group-hover:text-primary group-hover:translate-x-1" />
                     </div>
-                    <ArrowRight className="flex-shrink-0 w-4 h-4 text-muted-foreground/30 mt-1 transition-all duration-300 group-hover:text-primary group-hover:translate-x-1" />
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
               );
             })}
           </div>
