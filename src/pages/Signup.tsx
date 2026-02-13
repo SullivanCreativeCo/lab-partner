@@ -5,6 +5,7 @@ import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import logo from "@/assets/logo.png";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,8 +16,8 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <div className="p-4">
-        <Link to="/" className="font-display text-lg font-bold tracking-tight">
-          lab<span className="text-primary">partner</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img src={logo} alt="Lab Partner" className="h-8 w-auto" />
         </Link>
       </div>
 
