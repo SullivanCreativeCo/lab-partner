@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Radio, MessageSquare, Users, Zap, Shield, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 const features = [
   {
@@ -42,8 +43,8 @@ const Index = () => {
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 glass-strong safe-bottom">
         <div className="container flex items-center justify-between h-14 px-4">
-          <Link to="/" className="font-display text-lg font-bold tracking-tight">
-            lab<span className="text-primary">partner</span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src={logo} alt="Lab Partner" className="h-8 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
             <Link to="/login">
@@ -212,9 +213,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="px-4 pb-8 pt-4 border-t border-border">
         <div className="container max-w-lg mx-auto flex items-center justify-between">
-          <p className="font-display text-sm font-bold tracking-tight">
-            lab<span className="text-primary">partner</span>
-          </p>
+          <img src={logo} alt="Lab Partner" className="h-6 w-auto" />
           <p className="text-xs text-muted-foreground">
             © 2026 Lab Partner
           </p>
