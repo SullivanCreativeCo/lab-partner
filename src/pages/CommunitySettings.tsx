@@ -1,19 +1,63 @@
 import CommunityLayout from "@/components/CommunityLayout";
 import { Palette, Type, Upload, Save } from "lucide-react";
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useCommunityBySlug } from "@/hooks/use-community";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CommunitySettings = () => {
-  const [name, setName] = useState("Creator Studio");
-  const [welcome, setWelcome] = useState("Welcome to the Lab! We're building something special here.");
+  const { slug } = useParams();
+  const { data: community } = useCommunityBySlug(slug);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [name, setName] = useState("");
+  const [welcome, setWelcome] = useState("");
   const [primaryColor, setPrimaryColor] = useState("#2F80ED");
   const [secondaryColor, setSecondaryColor] = useState("#4169B5");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (community) {
+      setName(community.name);
+      setWelcome(community.welcome_message ?? "");
+      setPrimaryColor(community.primary_color ?? "#2F80ED");
+      setSecondaryColor(community.secondary_color ?? "#4169B5");
+    }
+  }, [community]);
+
+  const handleSave = async () => {
+    if (!community) return;
+    setSaving(true);
+
+    const { error } = await supabase
+      .from("communities")
+      .update({
+        name,
+        welcome_message: welcome,
+        primary_color: primaryColor,
+        secondary_color: secondaryColor,
+      })
+      .eq("id", community.id);
+
+    setSaving(false);
+
+    if (error) {
+      toast({ variant: "destructive", title: "Failed to save", description: error.message });
+      return;
+    }
+
+    toast({ title: "Settings saved" });
+    queryClient.invalidateQueries({ queryKey: ["community", slug] });
+  };
 
   return (
-    <CommunityLayout communityName="Creator Studio">
+    <CommunityLayout communityName={community?.name ?? "Community"}>
       <div className="px-4 py-4 space-y-6">
         <h2 className="font-semibold text-lg">Settings</h2>
 
@@ -126,9 +170,13 @@ const CommunitySettings = () => {
           </div>
         </section>
 
-        <Button className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2">
+        <Button
+          className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2"
+          onClick={handleSave}
+          disabled={saving}
+        >
           <Save className="w-4 h-4" />
-          Save Changes
+          {saving ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </CommunityLayout>

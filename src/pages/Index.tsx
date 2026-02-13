@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { ArrowRight, Radio, MessageSquare, Users, Shield } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, Radio, MessageSquare, Users, Shield, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo.png";
 
 const features = [
@@ -32,6 +33,14 @@ const features = [
 ];
 
 const Index = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Nav */}
@@ -41,16 +50,37 @@ const Index = () => {
             <img src={logo} alt="Lab Partner" className="h-7 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
-            <Link to="/login">
-              <Button variant="ghost" size="sm" className="text-muted-foreground text-sm">
-                Log in
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button size="sm" className="btn-primary-gradient text-sm font-medium">
-                Get Started
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/create-community">
+                  <Button size="sm" className="btn-primary-gradient text-sm font-medium">
+                    Create Lab
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground text-sm gap-1.5"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground text-sm">
+                    Log in
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button size="sm" className="btn-primary-gradient text-sm font-medium">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>

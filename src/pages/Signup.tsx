@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 import logo from "@/assets/logo.png";
 
 const Signup = () => {
@@ -12,6 +14,39 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: name },
+      },
+    });
+
+    setLoading(false);
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Signup failed",
+        description: error.message,
+      });
+      return;
+    }
+
+    toast({
+      title: "Account created",
+      description: "Welcome to Lab Partner!",
+    });
+    navigate("/create-community");
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -33,7 +68,7 @@ const Signup = () => {
             Start building your community today
           </p>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSignup}>
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium">Full name</Label>
               <Input
@@ -43,6 +78,7 @@ const Signup = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="h-11 bg-muted/50 border-border"
+                disabled={loading}
               />
             </div>
 
@@ -55,6 +91,7 @@ const Signup = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-11 bg-muted/50 border-border"
+                disabled={loading}
               />
             </div>
 
@@ -68,6 +105,7 @@ const Signup = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-11 bg-muted/50 border-border pr-10"
+                  disabled={loading}
                 />
                 <button
                   type="button"
@@ -79,9 +117,13 @@ const Signup = () => {
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2">
-              Create account
-              <ArrowRight className="w-4 h-4" />
+            <Button
+              type="submit"
+              className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2"
+              disabled={loading}
+            >
+              {loading ? "Creating account..." : "Create account"}
+              {!loading && <ArrowRight className="w-4 h-4" />}
             </Button>
 
             <p className="text-xs text-muted-foreground text-center leading-relaxed">

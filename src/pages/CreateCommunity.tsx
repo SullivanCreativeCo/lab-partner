@@ -1,21 +1,65 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 import logo from "@/assets/logo.png";
 
 const CreateCommunity = () => {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [welcome, setWelcome] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleNameChange = (value: string) => {
     setName(value);
     setSlug(value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
+  };
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !name || !slug) return;
+    setLoading(true);
+
+    const { data: community, error } = await supabase
+      .from("communities")
+      .insert({
+        name,
+        slug,
+        welcome_message: welcome,
+        owner_id: user.id,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      setLoading(false);
+      toast({
+        variant: "destructive",
+        title: "Failed to create community",
+        description: error.message,
+      });
+      return;
+    }
+
+    // Add creator as owner member
+    await supabase.from("community_members").insert({
+      community_id: community.id,
+      user_id: user.id,
+      role: "owner" as const,
+    });
+
+    setLoading(false);
+    navigate(`/c/${slug}`);
   };
 
   return (
@@ -42,7 +86,7 @@ const CreateCommunity = () => {
             Set up your branded community space
           </p>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleCreate}>
             <div className="space-y-2">
               <Label className="text-sm font-medium">Community Name</Label>
               <Input
@@ -50,6 +94,7 @@ const CreateCommunity = () => {
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 className="h-11 bg-muted/50 border-border"
+                disabled={loading}
               />
             </div>
 
@@ -64,6 +109,7 @@ const CreateCommunity = () => {
                   onChange={(e) => setSlug(e.target.value)}
                   className="h-11 border-0 bg-transparent rounded-none focus-visible:ring-0 text-sm"
                   placeholder="my-community"
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -75,6 +121,7 @@ const CreateCommunity = () => {
                 value={welcome}
                 onChange={(e) => setWelcome(e.target.value)}
                 className="bg-muted/50 border-border min-h-[80px] resize-none"
+                disabled={loading}
               />
               <p className="text-xs text-muted-foreground">Shown to new members when they join</p>
             </div>
@@ -99,16 +146,14 @@ const CreateCommunity = () => {
               </motion.div>
             )}
 
-            <Link to={slug ? `/c/${slug}` : "#"}>
-              <Button
-                type="submit"
-                className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2 mt-2"
-                disabled={!name || !slug}
-              >
-                Create Lab
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            <Button
+              type="submit"
+              className="w-full h-11 btn-primary-gradient text-sm font-semibold gap-2 mt-2"
+              disabled={!name || !slug || loading}
+            >
+              {loading ? "Creating..." : "Create Lab"}
+              {!loading && <ArrowRight className="w-4 h-4" />}
+            </Button>
           </form>
         </motion.div>
       </div>
