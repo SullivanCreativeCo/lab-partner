@@ -43,7 +43,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
+       <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
         <div className="container flex items-center justify-between h-14 px-4">
           <Link to="/" className="flex items-center gap-2">
             <img src={logo} alt="Lab Partner" className="h-7 w-auto" />
@@ -66,7 +66,7 @@ const Index = () => {
       {/* Hero */}
       <section className="relative pt-24 pb-16 px-4">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/8 rounded-full blur-[120px]" />
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/8 blur-[120px]" />
         </div>
 
         <div className="relative container max-w-lg mx-auto text-center">
@@ -125,13 +125,13 @@ const Index = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.45, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className={`group relative overflow-hidden rounded-xl border ${feature.borderAccent} bg-card/60 backdrop-blur-sm cursor-default transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
+                  className={`group relative overflow-hidden border ${feature.borderAccent} bg-card/60 backdrop-blur-sm cursor-default transition-all duration-300 hover:shadow-lg hover:shadow-primary/5`}
                 >
                   {/* Gradient accent strip */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   
                   <div className="relative flex items-start gap-4 p-5">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary/15 to-accent/10 border border-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
                       <Icon className="w-4.5 h-4.5 text-primary" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -155,7 +155,7 @@ const Index = () => {
       {/* CTA */}
       <section className="px-4 pb-20">
         <div className="container max-w-lg mx-auto text-center">
-          <div className="p-8 rounded-lg border border-primary/20 bg-primary/5">
+          <div className="p-8 border border-primary/20 bg-primary/5">
             <h2 className="text-2xl font-bold tracking-tight mb-2">
               Ready to own your audience?
             </h2>
