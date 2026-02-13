@@ -79,7 +79,7 @@ const Index = () => {
               Now in beta
             </div>
 
-            <img src={logo} alt="Lab Partner" className="h-40 w-auto mx-auto mb-6" />
+            <img src={logo} alt="Lab Partner" className="h-48 w-auto mx-auto mb-6 drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]" />
 
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-4">
               Stop renting
