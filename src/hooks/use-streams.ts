@@ -46,6 +46,7 @@ export function useCreateStream() {
       title: string;
       description: string;
       community_id: string;
+      simulcast_platform_ids?: string[];
     }) => {
       const {
         data: { session },

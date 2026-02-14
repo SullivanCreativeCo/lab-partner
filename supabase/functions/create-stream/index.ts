@@ -46,7 +46,7 @@ serve(async (req) => {
       });
     }
 
-    const { title, description, community_id } = await req.json();
+    const { title, description, community_id, simulcast_platform_ids } = await req.json();
 
     if (!title || !community_id) {
       return new Response(
@@ -82,6 +82,29 @@ serve(async (req) => {
       );
     }
 
+    // Build Mux request body
+    const muxBody: Record<string, unknown> = {
+      playback_policy: ["public"],
+      new_asset_settings: { playback_policy: ["public"] },
+      reduced_latency: true,
+    };
+
+    // If simulcast platforms were selected, fetch them and add to Mux request
+    if (simulcast_platform_ids && simulcast_platform_ids.length > 0) {
+      const { data: platforms, error: platformsError } = await supabase
+        .from("simulcast_platforms")
+        .select("rtmp_url, stream_key")
+        .in("id", simulcast_platform_ids)
+        .eq("community_id", community_id);
+
+      if (!platformsError && platforms && platforms.length > 0) {
+        muxBody.simulcast_targets = platforms.map((p: { rtmp_url: string; stream_key: string }) => ({
+          url: p.rtmp_url,
+          stream_key: p.stream_key,
+        }));
+      }
+    }
+
     // Create Mux live stream
     const muxAuth = btoa(`${muxTokenId}:${muxTokenSecret}`);
     const muxResponse = await fetch(
@@ -92,11 +115,7 @@ serve(async (req) => {
           Authorization: `Basic ${muxAuth}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          playback_policy: ["public"],
-          new_asset_settings: { playback_policy: ["public"] },
-          reduced_latency: true,
-        }),
+        body: JSON.stringify(muxBody),
       }
     );
 

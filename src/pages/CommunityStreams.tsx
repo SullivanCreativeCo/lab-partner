@@ -12,11 +12,20 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useCommunityBySlug } from "@/hooks/use-community";
 import { useStreams, useCreateStream } from "@/hooks/use-streams";
+import { useSimulcastPlatforms } from "@/hooks/use-simulcast";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { timeAgo } from "@/lib/format";
+
+const PLATFORM_COLORS: Record<string, string> = {
+  youtube: "#FF0000",
+  twitch: "#9146FF",
+  facebook: "#1877F2",
+  linkedin: "#0A66C2",
+};
 
 const statusConfig = {
   live: { label: "LIVE", className: "bg-destructive/10 text-destructive", dot: true },
@@ -31,10 +40,12 @@ const CommunityStreams = () => {
   const { data: community } = useCommunityBySlug(slug);
   const { data: streams, isLoading } = useStreams(community?.id);
   const createStream = useCreateStream();
+  const { data: simulcastPlatforms } = useSimulcastPlatforms(community?.id);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedPlatformIds, setSelectedPlatformIds] = useState<string[]>([]);
 
   // After creating a stream, show RTMP credentials
   const [createdStream, setCreatedStream] = useState<{
@@ -51,11 +62,17 @@ const CommunityStreams = () => {
     if (!title.trim() || !community) return;
 
     createStream.mutate(
-      { title, description, community_id: community.id },
+      {
+        title,
+        description,
+        community_id: community.id,
+        ...(selectedPlatformIds.length > 0 && { simulcast_platform_ids: selectedPlatformIds }),
+      },
       {
         onSuccess: (data) => {
           setTitle("");
           setDescription("");
+          setSelectedPlatformIds([]);
           setDialogOpen(false);
           setCreatedStream({
             stream_key: data.stream_key,
@@ -187,6 +204,51 @@ const CommunityStreams = () => {
                 rows={3}
               />
             </div>
+
+            {/* Simulcast platforms */}
+            {community?.simulcast_enabled && (simulcastPlatforms ?? []).filter((p) => p.enabled).length > 0 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium mb-1 block">
+                  Simulcast
+                  <span className="text-[10px] font-bold tracking-widest text-primary/60 uppercase ml-2">ADD-ON</span>
+                </label>
+                <div className="space-y-2">
+                  {(simulcastPlatforms ?? []).filter((p) => p.enabled).map((platform) => {
+                    const color = PLATFORM_COLORS[platform.platform] ?? "#666";
+                    const checked = selectedPlatformIds.includes(platform.id);
+                    return (
+                      <label
+                        key={platform.id}
+                        className="flex items-center gap-3 p-2.5 rounded-md border border-border bg-card/50 cursor-pointer hover:bg-card transition-colors"
+                      >
+                        <Checkbox
+                          checked={checked}
+                          onCheckedChange={(c) => {
+                            setSelectedPlatformIds((prev) =>
+                              c ? [...prev, platform.id] : prev.filter((id) => id !== platform.id)
+                            );
+                          }}
+                        />
+                        <div
+                          className="w-6 h-6 rounded flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: color + "20" }}
+                        >
+                          <span className="text-[10px] font-bold" style={{ color }}>
+                            {platform.platform[0].toUpperCase()}
+                          </span>
+                        </div>
+                        <span className="text-sm">{platform.label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {selectedPlatformIds.length > 0 && (
+                  <p className="text-[11px] text-muted-foreground">
+                    Streaming to {selectedPlatformIds.length} additional platform{selectedPlatformIds.length > 1 ? "s" : ""} may incur extra costs.
+                  </p>
+                )}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setDialogOpen(false)}>

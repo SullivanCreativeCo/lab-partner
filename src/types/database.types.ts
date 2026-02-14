@@ -43,6 +43,7 @@ export type Database = {
           secondary_color: string;
           owner_id: string;
           created_at: string;
+          simulcast_enabled: boolean;
           updated_at: string;
         };
         Insert: {
@@ -53,6 +54,7 @@ export type Database = {
           logo_url?: string | null;
           primary_color?: string;
           secondary_color?: string;
+          simulcast_enabled?: boolean;
           owner_id: string;
           created_at?: string;
           updated_at?: string;
@@ -64,6 +66,7 @@ export type Database = {
           logo_url?: string | null;
           primary_color?: string;
           secondary_color?: string;
+          simulcast_enabled?: boolean;
           updated_at?: string;
         };
         Relationships: [
@@ -245,6 +248,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "streams_community_id_fkey";
+            columns: ["community_id"];
+            isOneToOne: false;
+            referencedRelation: "communities";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      simulcast_platforms: {
+        Row: {
+          id: string;
+          community_id: string;
+          platform: string;
+          label: string;
+          rtmp_url: string;
+          stream_key: string;
+          enabled: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          community_id: string;
+          platform: string;
+          label?: string;
+          rtmp_url: string;
+          stream_key: string;
+          enabled?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          platform?: string;
+          label?: string;
+          rtmp_url?: string;
+          stream_key?: string;
+          enabled?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "simulcast_platforms_community_id_fkey";
             columns: ["community_id"];
             isOneToOne: false;
             referencedRelation: "communities";
