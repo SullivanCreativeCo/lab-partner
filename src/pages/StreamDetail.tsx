@@ -58,7 +58,7 @@ const StreamDetail = () => {
     );
   }
 
-  const showOwnerSetup = isOwner && stream.stream_key && stream.status === "scheduled";
+  const showOwnerSetup = isOwner && stream.mux_stream_key && stream.status === "scheduled";
 
   return (
     <CommunityLayout communityName={community?.name ?? "Community"}>
@@ -74,7 +74,7 @@ const StreamDetail = () => {
 
         {/* Player / Broadcast Area */}
         {stream.status === "live" && isOwner && broadcastMode === "browser" ? (
-          <BrowserBroadcast streamKey={stream.stream_key!} />
+          <BrowserBroadcast streamKey={stream.mux_stream_key!} />
         ) : stream.status === "live" && stream.mux_playback_id ? (
           <div className="rounded-lg overflow-hidden border border-primary/20">
             <MuxPlayer
@@ -93,7 +93,7 @@ const StreamDetail = () => {
             />
           </div>
         ) : showOwnerSetup && broadcastMode === "browser" ? (
-          <BrowserBroadcast streamKey={stream.stream_key!} />
+          <BrowserBroadcast streamKey={stream.mux_stream_key!} />
         ) : showOwnerSetup && broadcastMode === "choose" ? (
           <div className="aspect-video rounded-lg border border-border bg-card flex flex-col items-center justify-center gap-4 p-6">
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -155,7 +155,7 @@ const StreamDetail = () => {
         </div>
 
         {/* Owner: OBS/RTMP Credentials */}
-        {isOwner && stream.stream_key && broadcastMode === "obs" && (stream.status === "scheduled" || stream.status === "live") && (
+        {isOwner && stream.mux_stream_key && broadcastMode === "obs" && (stream.status === "scheduled" || stream.status === "live") && (
           <div className="rounded-lg border border-border bg-card p-4 space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold">OBS Setup</h3>
@@ -194,7 +194,7 @@ const StreamDetail = () => {
               <label className="text-xs font-medium text-muted-foreground mb-1 block">Stream Key</label>
               <div className="flex gap-2">
                 <Input
-                  value={stream.stream_key}
+                  value={stream.mux_stream_key}
                   readOnly
                   className="font-mono text-xs"
                   type="password"
@@ -203,7 +203,7 @@ const StreamDetail = () => {
                   variant="outline"
                   size="icon"
                   className="shrink-0"
-                  onClick={() => copyToClipboard(stream.stream_key!, "key")}
+                  onClick={() => copyToClipboard(stream.mux_stream_key!, "key")}
                 >
                   {copiedKey ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                 </Button>
