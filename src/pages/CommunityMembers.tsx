@@ -34,14 +34,14 @@ const CommunityMembers = () => {
         ) : (
           <div className="space-y-1">
             {(members ?? []).map((member) => {
-              const config = roleConfig[member.role as keyof typeof roleConfig];
+              const config = roleConfig[(member as any).role as keyof typeof roleConfig];
               const profile = (member as any).profiles;
               const name = profile?.full_name || "Unknown";
               const avatar = name[0]?.toUpperCase() ?? "?";
 
               return (
                 <div
-                  key={member.id}
+                  key={(member as any).id}
                   className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
                   <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary flex-shrink-0">
@@ -54,7 +54,7 @@ const CommunityMembers = () => {
                         <config.icon className={`w-3.5 h-3.5 ${config.className}`} />
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground">Joined {timeAgo(member.joined_at)}</p>
+                    <p className="text-xs text-muted-foreground">Joined {timeAgo((member as any).joined_at)}</p>
                   </div>
                   <button className="text-muted-foreground hover:text-foreground transition-colors p-1">
                     <MoreHorizontal className="w-4 h-4" />

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 
 const COLOR_PRESETS = [
@@ -80,10 +80,10 @@ const CreateCommunity = () => {
     }
 
     // Add creator as owner member
-    const { error: memberError } = await supabase.from("community_members").insert({
+    const { error: memberError } = await supabase.from("members").insert({
       community_id: community.id,
       user_id: user.id,
-      role: "owner" as const,
+      role: "owner",
     });
 
     if (memberError) {

@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export function useSimulcastPlatforms(communityId: string | undefined) {
   return useQuery({
     queryKey: ["simulcast-platforms", communityId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("simulcast_platforms")
+        .from("simulcast_targets")
         .select("*")
         .eq("community_id", communityId!)
         .order("created_at", { ascending: true });
@@ -29,7 +29,7 @@ export function useAddSimulcastPlatform() {
       stream_key: string;
     }) => {
       const { data, error } = await supabase
-        .from("simulcast_platforms")
+        .from("simulcast_targets")
         .insert(payload)
         .select()
         .single();
@@ -60,7 +60,7 @@ export function useUpdateSimulcastPlatform() {
       stream_key?: string;
     }) => {
       const { error } = await supabase
-        .from("simulcast_platforms")
+        .from("simulcast_targets")
         .update(updates)
         .eq("id", id);
       if (error) throw error;
@@ -85,7 +85,7 @@ export function useDeleteSimulcastPlatform() {
       community_id: string;
     }) => {
       const { error } = await supabase
-        .from("simulcast_platforms")
+        .from("simulcast_targets")
         .delete()
         .eq("id", id);
       if (error) throw error;

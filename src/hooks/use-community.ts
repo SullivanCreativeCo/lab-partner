@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export function useCommunityBySlug(slug: string | undefined) {
   return useQuery({
@@ -40,7 +40,7 @@ export function useCommunityMembers(communityId: string | undefined) {
     queryKey: ["community-members", communityId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("community_members")
+        .from("members")
         .select("*, profiles(*)")
         .eq("community_id", communityId!)
         .order("joined_at", { ascending: true });
