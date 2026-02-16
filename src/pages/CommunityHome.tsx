@@ -1,5 +1,6 @@
+import { useState } from "react";
 import CommunityLayout from "@/components/CommunityLayout";
-import { Radio, MessageSquare, ArrowRight, ChevronUp, Film, Play, Users, Upload, Calendar } from "lucide-react";
+import { Radio, MessageSquare, ArrowRight, ChevronUp, Film, Play, Users, Upload, Calendar, Share2, Link2, Code, Check } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCommunityBySlug, useCommunityMembers } from "@/hooks/use-community";
@@ -9,6 +10,9 @@ import { useVideos } from "@/hooks/use-videos";
 import { useAuth } from "@/contexts/AuthContext";
 import { timeAgo } from "@/lib/format";
 import { format } from "date-fns";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const CommunityHome = () => {
   const { slug } = useParams();
@@ -20,6 +24,22 @@ const CommunityHome = () => {
   const { data: members } = useCommunityMembers(community?.id);
 
   const isOwner = user && community && user.id === community.owner_id;
+  const [copiedUrl, setCopiedUrl] = useState(false);
+  const [copiedEmbed, setCopiedEmbed] = useState(false);
+
+  const communityUrl = `${window.location.origin}/c/${slug}`;
+  const embedCode = `<iframe src="${communityUrl}" width="100%" height="600" frameborder="0" style="border:0;border-radius:8px;" allowfullscreen></iframe>`;
+
+  const copyToClipboard = (text: string, type: "url" | "embed") => {
+    navigator.clipboard.writeText(text);
+    if (type === "url") {
+      setCopiedUrl(true);
+      setTimeout(() => setCopiedUrl(false), 2000);
+    } else {
+      setCopiedEmbed(true);
+      setTimeout(() => setCopiedEmbed(false), 2000);
+    }
+  };
 
   const liveStream = streams?.find((s) => s.status === "live");
   const trendingPosts = (posts ?? []).slice(0, 3);
@@ -60,6 +80,7 @@ const CommunityHome = () => {
 
         {/* Owner: Stats Dashboard */}
         {isOwner && (
+          <>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center">
               <Users className="w-5 h-5 text-primary mb-2" />
@@ -89,6 +110,58 @@ const CommunityHome = () => {
               <p className="text-xs text-muted-foreground">Last Live Stream</p>
             </div>
           </div>
+
+          {/* Share Link */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full gap-2">
+                <Share2 className="w-4 h-4" />
+                Share Your Lab
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Share Your Lab</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    <Link2 className="w-4 h-4 text-primary" />
+                    Community URL
+                  </label>
+                  <div className="flex gap-2">
+                    <Input value={communityUrl} readOnly className="text-sm" />
+                    <Button
+                      size="sm"
+                      variant={copiedUrl ? "default" : "secondary"}
+                      className="shrink-0 gap-1.5"
+                      onClick={() => copyToClipboard(communityUrl, "url")}
+                    >
+                      {copiedUrl ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
+                      {copiedUrl ? "Copied!" : "Copy"}
+                    </Button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    <Code className="w-4 h-4 text-primary" />
+                    Embed Code
+                  </label>
+                  <Textarea value={embedCode} readOnly rows={3} className="text-xs font-mono" />
+                  <Button
+                    size="sm"
+                    variant={copiedEmbed ? "default" : "secondary"}
+                    className="w-full gap-1.5"
+                    onClick={() => copyToClipboard(embedCode, "embed")}
+                  >
+                    {copiedEmbed ? <Check className="w-4 h-4" /> : <Code className="w-4 h-4" />}
+                    {copiedEmbed ? "Copied!" : "Copy Embed Code"}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+          </>
         )}
 
         {/* Subscriber: Public Profile / About */}
