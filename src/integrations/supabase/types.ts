@@ -297,6 +297,126 @@ export type Database = {
           },
         ]
       }
+      video_comments: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          upvote_count: number | null
+          video_id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          upvote_count?: number | null
+          video_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          upvote_count?: number | null
+          video_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_comments_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_votes: {
+        Row: {
+          created_at: string
+          id: string
+          user_id: string
+          video_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_id: string
+          video_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_id?: string
+          video_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_votes_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      videos: {
+        Row: {
+          comment_count: number | null
+          community_id: string
+          created_at: string
+          description: string | null
+          duration_seconds: number | null
+          id: string
+          owner_id: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          upvote_count: number | null
+          video_url: string
+          view_count: number | null
+        }
+        Insert: {
+          comment_count?: number | null
+          community_id: string
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          id?: string
+          owner_id: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          upvote_count?: number | null
+          video_url: string
+          view_count?: number | null
+        }
+        Update: {
+          comment_count?: number | null
+          community_id?: string
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          id?: string
+          owner_id?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          upvote_count?: number | null
+          video_url?: string
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "videos_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       votes: {
         Row: {
           comment_id: string | null
