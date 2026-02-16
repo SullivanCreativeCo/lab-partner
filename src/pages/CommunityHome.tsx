@@ -111,17 +111,17 @@ const CommunityHome = () => {
             </div>
           </div>
 
-          {/* Share Link */}
+          {/* Get New Followers */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="w-full gap-2">
-                <Share2 className="w-4 h-4" />
-                Share Your Lab
+              <Button className="w-full gap-2 btn-primary-gradient text-sm font-semibold">
+                <Users className="w-4 h-4" />
+                Get New Followers
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Share Your Lab</DialogTitle>
+                <DialogTitle>Get New Followers</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
