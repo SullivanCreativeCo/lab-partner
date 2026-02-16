@@ -1,10 +1,11 @@
 import CommunityLayout from "@/components/CommunityLayout";
-import { Radio, MessageSquare, ArrowRight, ChevronUp } from "lucide-react";
+import { Radio, MessageSquare, ArrowRight, ChevronUp, Film, Play } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCommunityBySlug } from "@/hooks/use-community";
 import { usePosts } from "@/hooks/use-posts";
 import { useStreams } from "@/hooks/use-streams";
+import { useVideos } from "@/hooks/use-videos";
 import { timeAgo } from "@/lib/format";
 
 const CommunityHome = () => {
@@ -12,9 +13,11 @@ const CommunityHome = () => {
   const { data: community } = useCommunityBySlug(slug);
   const { data: posts } = usePosts(community?.id);
   const { data: streams } = useStreams(community?.id);
+  const { data: videos } = useVideos(community?.id);
 
   const liveStream = streams?.find((s) => s.status === "live");
   const trendingPosts = (posts ?? []).slice(0, 3);
+  const recentVideos = (videos ?? []).slice(0, 4);
 
   return (
     <CommunityLayout communityName={community?.name ?? "Community"}>
@@ -68,6 +71,46 @@ const CommunityHome = () => {
             </div>
           </Link>
         </div>
+
+        {/* Recent Videos */}
+        {recentVideos.length > 0 ? (
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-semibold text-base">Recent Videos</h2>
+              <Link to={`/c/${slug}/streams`} className="text-xs text-primary hover:underline flex items-center gap-1">
+                View all <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {recentVideos.map((video) => (
+                <Link
+                  key={video.id}
+                  to={`/c/${slug}/videos/${video.id}`}
+                  className="rounded-lg border border-border bg-card overflow-hidden card-interactive"
+                >
+                  <div className="aspect-video bg-muted relative flex items-center justify-center">
+                    {video.thumbnail_url ? (
+                      <img src={video.thumbnail_url} alt={video.title} className="absolute inset-0 w-full h-full object-cover" />
+                    ) : null}
+                    <div className="w-10 h-10 rounded-full bg-card/60 backdrop-blur flex items-center justify-center z-10">
+                      <Play className="w-4 h-4 text-foreground ml-0.5" />
+                    </div>
+                  </div>
+                  <div className="p-2.5">
+                    <h3 className="text-sm font-medium line-clamp-1">{video.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">{timeAgo(video.created_at)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-lg border border-border bg-card p-6 text-center">
+            <Film className="w-6 h-6 text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm font-medium mb-1">No videos yet</p>
+            <p className="text-xs text-muted-foreground">Uploaded videos will appear here</p>
+          </div>
+        )}
 
         {/* Trending Posts */}
         {trendingPosts.length > 0 ? (
