@@ -1,13 +1,15 @@
 import { ReactNode } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Radio, MessageSquare, Users, Settings, Home } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCommunityBySlug } from "@/hooks/use-community";
 
 interface CommunityLayoutProps {
   children: ReactNode;
   communityName?: string;
 }
 
-const navItems = [
+const ownerNavItems = [
   { icon: Home, label: "Home", path: "" },
   { icon: Radio, label: "Streams", path: "/streams" },
   { icon: MessageSquare, label: "Discuss", path: "/discussions" },
@@ -15,10 +17,20 @@ const navItems = [
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
+const subscriberNavItems = [
+  { icon: Home, label: "Home", path: "" },
+  { icon: Radio, label: "Streams", path: "/streams" },
+  { icon: MessageSquare, label: "Discuss", path: "/discussions" },
+];
+
 const CommunityLayout = ({ children, communityName = "Community" }: CommunityLayoutProps) => {
   const { slug } = useParams();
   const location = useLocation();
   const basePath = `/c/${slug}`;
+  const { user } = useAuth();
+  const { data: community } = useCommunityBySlug(slug);
+  const isOwner = user && community && user.id === community.owner_id;
+  const navItems = isOwner ? ownerNavItems : subscriberNavItems;
 
   const isActive = (path: string) => {
     if (path === "") return location.pathname === basePath;
