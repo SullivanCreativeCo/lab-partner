@@ -110,57 +110,6 @@ const CommunityHome = () => {
               <p className="text-xs text-muted-foreground">Last Live Stream</p>
             </div>
           </div>
-
-          {/* Get New Followers */}
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-full gap-2 btn-primary-gradient text-sm font-semibold">
-                <Users className="w-4 h-4" />
-                Get New Followers
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Get New Followers</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-2">
-                    <Link2 className="w-4 h-4 text-primary" />
-                    Community URL
-                  </label>
-                  <div className="flex gap-2">
-                    <Input value={communityUrl} readOnly className="text-sm" />
-                    <Button
-                      size="sm"
-                      variant={copiedUrl ? "default" : "secondary"}
-                      className="shrink-0 gap-1.5"
-                      onClick={() => copyToClipboard(communityUrl, "url")}
-                    >
-                      {copiedUrl ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
-                      {copiedUrl ? "Copied!" : "Copy"}
-                    </Button>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-2">
-                    <Code className="w-4 h-4 text-primary" />
-                    Embed Code
-                  </label>
-                  <Textarea value={embedCode} readOnly rows={3} className="text-xs font-mono" />
-                  <Button
-                    size="sm"
-                    variant={copiedEmbed ? "default" : "secondary"}
-                    className="w-full gap-1.5"
-                    onClick={() => copyToClipboard(embedCode, "embed")}
-                  >
-                    {copiedEmbed ? <Check className="w-4 h-4" /> : <Code className="w-4 h-4" />}
-                    {copiedEmbed ? "Copied!" : "Copy Embed Code"}
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
           </>
         )}
 
@@ -283,6 +232,61 @@ const CommunityHome = () => {
                 <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
+          </div>
+        )}
+
+        {/* Get New Followers - Owner only */}
+        {isOwner && (
+          <div className="flex justify-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="gap-2 btn-primary-gradient text-sm font-semibold">
+                  <Users className="w-4 h-4" />
+                  Get New Followers
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Get New Followers</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium flex items-center gap-2">
+                      <Link2 className="w-4 h-4 text-primary" />
+                      Community URL
+                    </label>
+                    <div className="flex gap-2">
+                      <Input value={communityUrl} readOnly className="text-sm" />
+                      <Button
+                        size="sm"
+                        variant={copiedUrl ? "default" : "secondary"}
+                        className="shrink-0 gap-1.5"
+                        onClick={() => copyToClipboard(communityUrl, "url")}
+                      >
+                        {copiedUrl ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
+                        {copiedUrl ? "Copied!" : "Copy"}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium flex items-center gap-2">
+                      <Code className="w-4 h-4 text-primary" />
+                      Embed Code
+                    </label>
+                    <Textarea value={embedCode} readOnly rows={3} className="text-xs font-mono" />
+                    <Button
+                      size="sm"
+                      variant={copiedEmbed ? "default" : "secondary"}
+                      className="w-full gap-1.5"
+                      onClick={() => copyToClipboard(embedCode, "embed")}
+                    >
+                      {copiedEmbed ? <Check className="w-4 h-4" /> : <Code className="w-4 h-4" />}
+                      {copiedEmbed ? "Copied!" : "Copy Embed Code"}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
       </div>
