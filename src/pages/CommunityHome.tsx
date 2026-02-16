@@ -6,16 +6,20 @@ import { useCommunityBySlug, useCommunityMembers } from "@/hooks/use-community";
 import { usePosts } from "@/hooks/use-posts";
 import { useStreams } from "@/hooks/use-streams";
 import { useVideos } from "@/hooks/use-videos";
+import { useAuth } from "@/contexts/AuthContext";
 import { timeAgo } from "@/lib/format";
 import { format } from "date-fns";
 
 const CommunityHome = () => {
   const { slug } = useParams();
+  const { user } = useAuth();
   const { data: community } = useCommunityBySlug(slug);
   const { data: posts } = usePosts(community?.id);
   const { data: streams } = useStreams(community?.id);
   const { data: videos } = useVideos(community?.id);
   const { data: members } = useCommunityMembers(community?.id);
+
+  const isOwner = user && community && user.id === community.owner_id;
 
   const liveStream = streams?.find((s) => s.status === "live");
   const trendingPosts = (posts ?? []).slice(0, 3);
@@ -54,36 +58,75 @@ const CommunityHome = () => {
           </div>
         )}
 
-        {/* Stats Dashboard */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <div className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center">
-            <Users className="w-5 h-5 text-primary mb-2" />
-            <p className="text-2xl font-bold">{members?.length ?? 0}</p>
-            <p className="text-xs text-muted-foreground">Lab Partners</p>
+        {/* Owner: Stats Dashboard */}
+        {isOwner && (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center">
+              <Users className="w-5 h-5 text-primary mb-2" />
+              <p className="text-2xl font-bold">{members?.length ?? 0}</p>
+              <p className="text-xs text-muted-foreground">Lab Partners</p>
+            </div>
+            <Link to={`/c/${slug}/streams`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
+              <Radio className="w-5 h-5 text-primary mb-2" />
+              <p className="text-2xl font-bold">{streams?.length ?? 0}</p>
+              <p className="text-xs text-muted-foreground">Streams</p>
+            </Link>
+            <Link to={`/c/${slug}/discussions`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
+              <MessageSquare className="w-5 h-5 text-primary mb-2" />
+              <p className="text-2xl font-bold">{posts?.length ?? 0}</p>
+              <p className="text-xs text-muted-foreground">Discussions</p>
+            </Link>
+            <Link to={`/c/${slug}/streams`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
+              <Upload className="w-5 h-5 text-primary mb-2" />
+              <p className="text-2xl font-bold">{videos?.length ?? 0}</p>
+              <p className="text-xs text-muted-foreground">Uploads</p>
+            </Link>
+            <div className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center col-span-2 sm:col-span-2">
+              <Calendar className="w-5 h-5 text-primary mb-2" />
+              <p className="text-sm font-bold">
+                {lastLiveStream ? format(new Date(lastLiveStream.created_at), "MMM d, yyyy") : "Never"}
+              </p>
+              <p className="text-xs text-muted-foreground">Last Live Stream</p>
+            </div>
           </div>
-          <Link to={`/c/${slug}/streams`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
-            <Radio className="w-5 h-5 text-primary mb-2" />
-            <p className="text-2xl font-bold">{streams?.length ?? 0}</p>
-            <p className="text-xs text-muted-foreground">Streams</p>
-          </Link>
-          <Link to={`/c/${slug}/discussions`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
-            <MessageSquare className="w-5 h-5 text-primary mb-2" />
-            <p className="text-2xl font-bold">{posts?.length ?? 0}</p>
-            <p className="text-xs text-muted-foreground">Discussions</p>
-          </Link>
-          <Link to={`/c/${slug}/streams`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
-            <Upload className="w-5 h-5 text-primary mb-2" />
-            <p className="text-2xl font-bold">{videos?.length ?? 0}</p>
-            <p className="text-xs text-muted-foreground">Uploads</p>
-          </Link>
-          <div className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center col-span-2 sm:col-span-2">
-            <Calendar className="w-5 h-5 text-primary mb-2" />
-            <p className="text-sm font-bold">
-              {lastLiveStream ? format(new Date(lastLiveStream.created_at), "MMM d, yyyy") : "Never"}
-            </p>
-            <p className="text-xs text-muted-foreground">Last Live Stream</p>
+        )}
+
+        {/* Subscriber: Public Profile / About */}
+        {!isOwner && (
+          <div className="rounded-lg border border-border bg-card p-5 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                {community?.logo_url ? (
+                  <img src={community.logo_url} alt={community.name} className="w-12 h-12 rounded-full object-cover" />
+                ) : (
+                  <span className="text-primary font-bold text-lg">
+                    {community?.name?.[0]?.toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div>
+                <h2 className="font-semibold text-lg">{community?.name}</h2>
+                <p className="text-xs text-muted-foreground">{members?.length ?? 0} Lab Partners</p>
+              </div>
+            </div>
+            {community?.description && (
+              <p className="text-sm text-muted-foreground">{community.description}</p>
+            )}
+            {community?.welcome_message && (
+              <p className="text-sm text-foreground/80 italic border-l-2 border-primary/30 pl-3">
+                {community.welcome_message}
+              </p>
+            )}
+            {!user && (
+              <Link to="/signup">
+                <Button size="sm" className="btn-primary-gradient text-sm font-semibold gap-1.5 w-full mt-2">
+                  Join Community
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              </Link>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Recent Videos */}
         {recentVideos.length > 0 ? (
