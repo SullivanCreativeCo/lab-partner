@@ -49,14 +49,7 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/c/:slug/streams"
-                element={
-                  <ProtectedRoute>
-                    <CommunityStreams />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/c/:slug/streams" element={<CommunityStreams />} />
               <Route
                 path="/c/:slug/discussions"
                 element={
@@ -73,22 +66,8 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/c/:slug/streams/:streamId"
-                element={
-                  <ProtectedRoute>
-                    <StreamDetail />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/c/:slug/videos/:videoId"
-                element={
-                  <ProtectedRoute>
-                    <VideoDetail />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/c/:slug/streams/:streamId" element={<StreamDetail />} />
+              <Route path="/c/:slug/videos/:videoId" element={<VideoDetail />} />
               <Route
                 path="/c/:slug/members"
                 element={
