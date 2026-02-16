@@ -41,41 +41,13 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/c/:slug"
-                element={
-                  <ProtectedRoute>
-                    <CommunityHome />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/c/:slug" element={<CommunityHome />} />
               <Route path="/c/:slug/streams" element={<CommunityStreams />} />
-              <Route
-                path="/c/:slug/discussions"
-                element={
-                  <ProtectedRoute>
-                    <CommunityDiscussions />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/c/:slug/discussions/:postId"
-                element={
-                  <ProtectedRoute>
-                    <PostDetail />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/c/:slug/discussions" element={<CommunityDiscussions />} />
+              <Route path="/c/:slug/discussions/:postId" element={<PostDetail />} />
               <Route path="/c/:slug/streams/:streamId" element={<StreamDetail />} />
               <Route path="/c/:slug/videos/:videoId" element={<VideoDetail />} />
-              <Route
-                path="/c/:slug/members"
-                element={
-                  <ProtectedRoute>
-                    <CommunityMembers />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/c/:slug/members" element={<CommunityMembers />} />
               <Route
                 path="/c/:slug/settings"
                 element={
