@@ -1,12 +1,13 @@
 import CommunityLayout from "@/components/CommunityLayout";
-import { Radio, MessageSquare, ArrowRight, ChevronUp, Film, Play } from "lucide-react";
+import { Radio, MessageSquare, ArrowRight, ChevronUp, Film, Play, Users, Upload, Calendar } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useCommunityBySlug } from "@/hooks/use-community";
+import { useCommunityBySlug, useCommunityMembers } from "@/hooks/use-community";
 import { usePosts } from "@/hooks/use-posts";
 import { useStreams } from "@/hooks/use-streams";
 import { useVideos } from "@/hooks/use-videos";
 import { timeAgo } from "@/lib/format";
+import { format } from "date-fns";
 
 const CommunityHome = () => {
   const { slug } = useParams();
@@ -14,10 +15,15 @@ const CommunityHome = () => {
   const { data: posts } = usePosts(community?.id);
   const { data: streams } = useStreams(community?.id);
   const { data: videos } = useVideos(community?.id);
+  const { data: members } = useCommunityMembers(community?.id);
 
   const liveStream = streams?.find((s) => s.status === "live");
   const trendingPosts = (posts ?? []).slice(0, 3);
   const recentVideos = (videos ?? []).slice(0, 4);
+
+  const lastLiveStream = streams
+    ?.filter((s) => s.status !== "idle")
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
 
   return (
     <CommunityLayout communityName={community?.name ?? "Community"}>
@@ -48,28 +54,35 @@ const CommunityHome = () => {
           </div>
         )}
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-3">
-          <Link
-            to={`/c/${slug}/streams`}
-            className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card card-interactive"
-          >
-            <Radio className="w-5 h-5 text-primary" />
-            <div>
-              <p className="text-sm font-medium">Streams</p>
-              <p className="text-xs text-muted-foreground">{streams?.length ?? 0} total</p>
-            </div>
+        {/* Stats Dashboard */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center">
+            <Users className="w-5 h-5 text-primary mb-2" />
+            <p className="text-2xl font-bold">{members?.length ?? 0}</p>
+            <p className="text-xs text-muted-foreground">Lab Partners</p>
+          </div>
+          <Link to={`/c/${slug}/streams`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
+            <Radio className="w-5 h-5 text-primary mb-2" />
+            <p className="text-2xl font-bold">{streams?.length ?? 0}</p>
+            <p className="text-xs text-muted-foreground">Streams</p>
           </Link>
-          <Link
-            to={`/c/${slug}/discussions`}
-            className="flex items-center gap-3 p-4 rounded-lg border border-border bg-card card-interactive"
-          >
-            <MessageSquare className="w-5 h-5 text-primary" />
-            <div>
-              <p className="text-sm font-medium">Discussions</p>
-              <p className="text-xs text-muted-foreground">{posts?.length ?? 0} posts</p>
-            </div>
+          <Link to={`/c/${slug}/discussions`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
+            <MessageSquare className="w-5 h-5 text-primary mb-2" />
+            <p className="text-2xl font-bold">{posts?.length ?? 0}</p>
+            <p className="text-xs text-muted-foreground">Discussions</p>
           </Link>
+          <Link to={`/c/${slug}/streams`} className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center card-interactive">
+            <Upload className="w-5 h-5 text-primary mb-2" />
+            <p className="text-2xl font-bold">{videos?.length ?? 0}</p>
+            <p className="text-xs text-muted-foreground">Uploads</p>
+          </Link>
+          <div className="rounded-lg border border-border bg-card p-4 flex flex-col items-center text-center col-span-2 sm:col-span-2">
+            <Calendar className="w-5 h-5 text-primary mb-2" />
+            <p className="text-sm font-bold">
+              {lastLiveStream ? format(new Date(lastLiveStream.created_at), "MMM d, yyyy") : "Never"}
+            </p>
+            <p className="text-xs text-muted-foreground">Last Live Stream</p>
+          </div>
         </div>
 
         {/* Recent Videos */}
