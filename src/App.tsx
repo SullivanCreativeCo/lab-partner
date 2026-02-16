@@ -16,6 +16,7 @@ import CommunityMembers from "./pages/CommunityMembers";
 import CommunitySettings from "./pages/CommunitySettings";
 import PostDetail from "./pages/PostDetail";
 import StreamDetail from "./pages/StreamDetail";
+import VideoDetail from "./pages/VideoDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -77,6 +78,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <StreamDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/c/:slug/videos/:videoId"
+                element={
+                  <ProtectedRoute>
+                    <VideoDetail />
                   </ProtectedRoute>
                 }
               />
