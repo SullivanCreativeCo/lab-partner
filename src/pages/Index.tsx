@@ -62,7 +62,7 @@ const Index = () => {
        <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
         <div className="container flex items-center justify-between h-14 px-4">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Lab Partner" className="h-7 w-auto" />
+            <img src={logo} alt="Lab Partner" className="h-10 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
             {user ? (
@@ -112,7 +112,7 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img src={logo} alt="Lab Partner" className="h-40 w-auto mx-auto mb-8" />
+            <img src={logo} alt="Lab Partner" className="h-56 w-auto mx-auto mb-8" />
 
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] mb-4">
               Your Audience.
@@ -206,7 +206,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="px-4 pb-8 pt-4 border-t border-border">
         <div className="container max-w-lg mx-auto flex items-center justify-between">
-          <img src={logo} alt="Lab Partner" className="h-6 w-auto" />
+          <img src={logo} alt="Lab Partner" className="h-8 w-auto" />
           <p className="text-xs text-muted-foreground">
             © 2026 Keegareaux Labs
           </p>
