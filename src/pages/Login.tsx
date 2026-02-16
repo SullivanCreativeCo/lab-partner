@@ -55,7 +55,7 @@ const Login = () => {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <div className="p-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Lab Partner" className="h-8 w-auto" />
+          <img src={logo} alt="Lab Partner" className="h-10 w-auto" />
         </Link>
       </div>
 
@@ -66,7 +66,7 @@ const Login = () => {
           transition={{ duration: 0.4 }}
           className="w-full max-w-sm"
         >
-          <img src={logo} alt="Lab Partner" className="h-16 w-auto mb-8" />
+          <img src={logo} alt="Lab Partner" className="h-24 w-auto mb-8" />
 
           <h1 className="text-2xl font-bold tracking-tight mb-1">Welcome back</h1>
           <p className="text-sm text-muted-foreground mb-8">

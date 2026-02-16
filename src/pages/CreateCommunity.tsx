@@ -104,7 +104,7 @@ const CreateCommunity = () => {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <div className="p-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Lab Partner" className="h-8 w-auto" />
+          <img src={logo} alt="Lab Partner" className="h-10 w-auto" />
         </Link>
         <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
           <ArrowLeft className="w-3.5 h-3.5" />
